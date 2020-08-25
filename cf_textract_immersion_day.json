@@ -1,0 +1,54 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Creates a bucket, an IAM role, and a SageMaker notebook pre-loaded with the Textract Immersion Day workshops.",
+    "Resources": {
+        "SageMakerRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [{
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": ["sagemaker.amazonaws.com"]
+                        },
+                        "Action": ["sts:AssumeRole"]
+                    }]
+                },
+                "ManagedPolicyArns": [
+					"arn:aws:iam::aws:policy/AmazonSageMakerFullAccess",
+					"arn:aws:iam::aws:policy/AmazonTextractFullAccess",
+					"arn:aws:iam::aws:policy/AmazonAugmentedAIFullAccess"
+				],
+                "Policies": [{
+                    "PolicyName": "AccessDataBucket",
+                    "PolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [{
+                            "Effect": "Allow",
+                            "Action": [
+								"s3:GetObject",
+								"s3:PutObject",
+								"s3:DeleteObject",
+								"s3:ListBucket"
+							],
+                            "Resource": "arn:aws:s3:::*"
+                        }]
+                    }
+                }]
+            }
+        },
+        "WorkshopNotebook": {
+            "Type": "AWS::SageMaker::NotebookInstance",
+            "Properties": {
+                "DefaultCodeRepository": "https://github.com/aws-samples/amazon-textract-code-samples.git",
+				"AdditionalCodeRepositories": ["https://github.com/aws-samples/amazon-a2i-sample-jupyter-notebooks.git"],
+                "InstanceType": "ml.t2.medium",
+                "NotebookInstanceName": "textract-immersion-day",
+                "RoleArn": {
+                    "Fn::GetAtt": ["SageMakerRole", "Arn"]
+                }
+            }
+        }
+    }
+}
