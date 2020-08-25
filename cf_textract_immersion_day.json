@@ -20,7 +20,8 @@
 					"arn:aws:iam::aws:policy/AmazonTextractFullAccess",
                     "arn:aws:iam::aws:policy/AmazonAugmentedAIFullAccess",
                     "arn:aws:iam::aws:policy/ComprehendFullAccess",
-                    "arn:aws:iam::aws:policy/ComprehendMedicalFullAccess"
+                    "arn:aws:iam::aws:policy/ComprehendMedicalFullAccess",
+                    "arn:aws:iam::aws:policy/TranslateFullAccess"
 				],
                 "Policies": [{
                     "PolicyName": "AccessDataBucket",
